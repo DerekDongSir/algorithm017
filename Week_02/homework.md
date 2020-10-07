@@ -80,7 +80,6 @@ func groupAnagrams(strs []string) [][]string {
 }
 ```
 
-
 #### 二叉树的中序遍历
 ```go
 /**
@@ -354,4 +353,150 @@ func levelOrder(root *Node) [][]int {
     return ans
 }
 ```
+
+#### 40.最小的k个数
+**桶排序**
+```go
+func getLeastNumbers(arr []int, k int) []int {
+    var(
+        ans = make([]int, 0, k * 2)
+        ls = make([]int, 10000)
+    )
+    for _, n := range arr{
+        ls[n] ++
+    }
+
+    for i, v := range ls{
+        if v > 0{
+            for t := 0; t < v; t ++{
+                ans = append(ans, i)
+            }
+            if len(ans) >= k{
+                break
+            }
+        }
+    }
+    return ans[:k]
+}
+```
+**heap**
+```py
+class Solution:
+    def getLeastNumbers(self, arr: List[int], k: int) -> List[int]:
+        ans  = []
+        heapq.heapify(arr)
+
+        for _ in range(k):
+            ans.append(heapq.heappop(arr))
+        
+        return ans
+```
+
+#### 347.前K个高频元素
+```py
+from collections import Counter
+
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        dic = collections.Counter(nums)
+
+        heap, ans = [], []
+
+        for i in dic:
+            heapq.heappush(heap, (-dic[i], i))
+
+        for _ in range(k):
+            ans.append(heapq.heappop(heap)[1])
+            
+        return ans
+```
+```py
+from collections import Counter
+
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        dic = collections.Counter(nums)
+
+        heap = []
+        
+        for i in dic:
+            heapq.heappush(heap, (dic[i], i))
+
+            if len(heap) > k:
+                heapq.heappop(heap)
+
+        return [i for _, i in heap]
+```
+
+#### 239.滑动窗口最大值
+```py
+from collections import deque
+
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        ans = []
+
+        q = deque()
+
+        for i, v in enumerate(nums):
+            while q and v >= nums[q[-1]]:
+                q.pop()
+            
+            q.append(i)
+
+            if q[0] <= i - k:
+                q.popleft()
+            
+            if i >= k - 1:
+                ans.append(nums[q[0]])
+        
+        return ans
+```
+
+#### 263.丑数
+```go
+func isUgly(num int) bool {
+    var NUMS = [3]int{5, 3, 2}
+
+    if num == 0{ return false }
+    if num == 1{ return true }
+
+    for _, n := range NUMS{
+        if num % n == 0{
+            return isUgly(num / n)
+        }
+    }
+    
+    return false 
+}
+```
+
+#### 264.丑数II
+```go
+func nthUglyNumber(n int) int {
+    var (
+        p2,p3,p5 = 0, 0, 0
+        ls = []int{1}
+        Min = func (a ...int) int {
+            min := int(^uint(0) >> 1) // largest int
+            for _, i := range a {
+                if i < min {
+                    min = i
+                }
+            }
+            return min
+        }
+    )
+
+    for i := 1; i < n; i++{
+        value := Min(ls[p2] * 2, ls[p3] * 3, ls[p5] * 5)
+        if value % 2 == 0{ p2 ++ }
+        if value % 3 == 0{ p3 ++ }
+        if value % 5 == 0{ p5 ++ }
+        ls = append(ls, value)
+    }
+    return ls[n - 1]
+}
+```
+
 
