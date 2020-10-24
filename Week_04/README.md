@@ -1,26 +1,48 @@
-874.模拟行走机器人
+#### DFS
+```py
+visited = set()
 
+def dfs(node):
+    if node in visited:
+        return 
 
-529.扫雷游戏
+    visited.add(node)
 
+    for nxt in node.children:
+        if nxt not in visited:
+            dfs(nxt)
+```
 
-55.跳跃游戏
+#### BFS
+```py
+def bfs(graph, start, end):
+    visited = set()
+    queue = []
+    queue.append([start])
 
+    while queue:
+        node = queue.pop()
+        visited.add(node)
 
-33.搜索旋转排序数组
+        process(node)
 
+        nodes = generate_related_nodes(node)
+        queue.push(nodes)
+```
 
-77.搜索二维矩阵
+#### binary search
+```py
+left, right = 0, len(array) - 1
 
+while left <= right:
+    mid = (left + right) // 2   
 
-153.寻找旋转排序数组中的最小值
+    if array[mid] == target:
+        # break or return result
 
+    elif array[mid] < target:
+        left = mid + 1
+    else:
+        right = mid - 1
 
-127.单词接龙
-
-
-126.单词接龙 II
-
-
-45.跳跃游戏 II
-
+```
